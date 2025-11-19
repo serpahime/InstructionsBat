@@ -1,0 +1,1 @@
+runas /savecred /user:Admin "C:\Program Files (x86)\Pro-face\GP-Pro EX 4.09 SP4\Designer.exe"

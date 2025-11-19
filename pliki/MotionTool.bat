@@ -1,0 +1,1 @@
+runas /savecred /user:Admin "C:\Program Files (x86)\Motion Tool\MotionTool\MotionTool.exe"

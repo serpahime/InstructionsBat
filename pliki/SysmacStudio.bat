@@ -1,0 +1,1 @@
+runas /savecred /user:Admin "C:\Program Files\Omron\SysmacStudio.exe"

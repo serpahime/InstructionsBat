@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Instrukcji IT i Utrzymania Ruchu</title>
+    <style>
+        :root {
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #f1f1f1;
+            --text-secondary: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), var(--darker-bg));
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: rgba(15, 52, 96, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--highlight), #ff7b9c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .files-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .file-item {
+            background: var(--accent);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 52, 96, 0.7);
+        }
+
+        .file-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .file-item.active .file-icon {
+            transform: rotate(180deg);
+        }
+
+        .file-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: rgba(26, 26, 46, 0.7);
+        }
+
+        .file-item.active .file-content {
+            max-height: 1000px;
+        }
+
+        .instructions {
+            padding: 1.5rem;
+        }
+
+        .department {
+            margin-bottom: 1.5rem;
+        }
+
+        .department:last-child {
+            margin-bottom: 0;
+        }
+
+        .department-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+            color: var(--highlight);
+        }
+
+        .instruction-list {
+            list-style-type: none;
+        }
+
+        .instruction-item {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+
+        .instruction-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .instruction-item::before {
+            content: "•";
+            color: var(--highlight);
+            font-weight: bold;
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .download-section {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+
+        .download-btn {
+            background: var(--highlight);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(233, 69, 96, 0.3);
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: #ff5c7c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 1000px; }
+        }
+
+        .file-item.active .file-content {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .file-header {
+                padding: 1rem;
+            }
+            
+            .instructions {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>System Instrukcji IT i Utrzymania Ruchu</h1>
+            <p class="subtitle">Kliknij na plik, aby wyświetlić instrukcje</p>
+        </header>
+
+        <main>
+            <div class="files-container">
+                <!-- Plik 1 -->
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-name">PCWinSafe-J (Toyopuc Safety)</div>
+                        <div class="file-icon">▼</div>
+                    </div>
+                    <div class="file-content">
+                        <div class="instructions">
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje IT</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">File .bat działa przez funkcje Windows Powershell za pomocą (runas /savecred) co potrzebuje przy pierwszym uruchomieniu hasło (od użytkownika Admin) a potem już zapamiętuje jego na zawsze.</li>
+                                </ul>
+                            </div>
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje Utrzymania Ruchu</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">Żeby Plik PCWinSafe-J pracował z Uprawnieniami Administratora należy uruchomić plik .bat "C:\Users\LocalUser\Desktop\PCwinSafeJ.bat"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="download-section">
+                            <button class="download-btn" data-filename="PCwinSafeJ.bat">
+                                <span>Pobierz Plik</span>
+                                <span>⬇️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plik 2 -->
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-name">Sysmac Studio (Omron)</div>
+                        <div class="file-icon">▼</div>
+                    </div>
+                    <div class="file-content">
+                        <div class="instructions">
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje IT</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">File .bat działa przez funkcje Windows Powershell za pomocą (runas /savecred) co potrzebuje przy pierwszym uruchomieniu hasło (od użytkownika Admin) a potem już zapamiętuje jego na zawsze.</li>
+                                </ul>
+                            </div>
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje Utrzymania Ruchu</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">Żeby Plik Sysmac Studio pracował z Uprawnieniami Administratora należy uruchomić plik .bat "C:\Users\LocalUser\Desktop\Sysmac Studio.bat"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="download-section">
+                            <button class="download-btn" data-filename="SysmacStudio.bat">
+                                <span>Pobierz Plik</span>
+                                <span>⬇️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plik 3 -->
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-name">GP-PRO EX SP4 (ProFace)</div>
+                        <div class="file-icon">▼</div>
+                    </div>
+                    <div class="file-content">
+                        <div class="instructions">
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje IT</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">File .bat działa przez funkcje Windows Powershell za pomocą (runas /savecred) co potrzebuje przy pierwszym uruchomieniu hasło (od użytkownika Admin) a potem już zapamiętuje jego na zawsze.</li>
+                                </ul>
+                            </div>
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje Utrzymania Ruchu</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">Żeby Plik GP-PRO EX SP4 pracował z Uprawnieniami Administratora należy uruchomić plik .bat "C:\Users\LocalUser\Desktop\GP-PRO EX SP4.bat"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="download-section">
+                            <button class="download-btn" data-filename="GPPROEXSP4.bat">
+                                <span>Pobierz Plik</span>
+                                <span>⬇️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plik 4 -->
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-name">MotionTool (Toyopuc MCML)</div>
+                        <div class="file-icon">▼</div>
+                    </div>
+                    <div class="file-content">
+                        <div class="instructions">
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje IT</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">File .bat działa przez funkcje Windows Powershell za pomocą (runas /savecred) co potrzebuje przy pierwszym uruchomieniu hasło (od użytkownika Admin) a potem już zapamiętuje jego na zawsze.</li>
+                                </ul>
+                            </div>
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje Utrzymania Ruchu</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">Żeby Plik MotionTool pracował z Uprawnieniami Administratora należy uruchomić plik .bat "C:\Users\LocalUser\Desktop\MotionTool.bat"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="download-section">
+                            <button class="download-btn" data-filename="MotionTool.bat">
+                                <span>Pobierz Plik</span>
+                                <span>⬇️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plik 5 -->
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-name">Menedżer Zad (Uprawnienia Admin)</div>
+                        <div class="file-icon">▼</div>
+                    </div>
+                    <div class="file-content">
+                        <div class="instructions">
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje IT</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">File .bat działa przez funkcje Windows CMD za pomocą (runas /savecred) co potrzebuje przy pierwszym uruchomieniu hasło (od użytkownika Admin) a potem już zapamiętuje jego na zawsze.</li>
+                                </ul>
+                            </div>
+                            <div class="department">
+                                <h3 class="department-title">Instrukcje Utrzymania Ruchu</h3>
+                                <ul class="instruction-list">
+                                    <li class="instruction-item">Menedżer urządzeń żeby uruchomić jako admin należy uruchomić bata "C:\Users\LocalUser\Desktop\menurz.bat"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="download-section">
+                            <button class="download-btn" data-filename="menurz.bat">
+                                <span>Pobierz Plik</span>
+                                <span>⬇️</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Instrukcje Skryptów  &copy; 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileItems = document.querySelectorAll('.file-item');
+            
+            fileItems.forEach(item => {
+                const header = item.querySelector('.file-header');
+                
+                header.addEventListener('click', function() {
+                    // Zamknij wszystkie inne otwarte pliki
+                    fileItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // Przełącz aktualny plik
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // Obsługa przycisków pobierania
+            const downloadButtons = document.querySelectorAll('.download-btn');
+            
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Zapobiega otwieraniu/zamykaniu pliku przy kliknięciu przycisku
+                    const fileName = this.getAttribute('data-filename');
+                    downloadFile(fileName);
+                });
+            });
+
+            // Funkcja do pobierania plików
+            function downloadFile(filename) {
+                // Zawartość plików BAT z poprawionymi ścieżkami
+                const fileContents = {
+                    'PCwinSafeJ.bat': `@echo off\necho Uruchamianie PCWinSafe-J z uprawnieniami administratora...\nrunas /savecred /user:Admin "C:\\Program Files (x86)\\PCwin-Safe-J\\PCwinSafeJ.exe"\necho Jeśli to pierwsze uruchomienie, wprowadź hasło administratora\necho Następne uruchomienia nie będą wymagać hasła\npause`,
+                    
+                    'SysmacStudio.bat': `@echo off\necho Uruchamianie Sysmac Studio z uprawnieniami administratora...\nrunas /savecred /user:Admin "C:\\Program Files\\Omron\\SysmacStudio.exe"\necho Jeśli to pierwsze uruchomienie, wprowadź hasło administratora\necho Następne uruchomienia nie będą wymagać hasła\npause`,
+                    
+                    'GPPROEXSP4.bat': `@echo off\necho Uruchamianie GP-PRO EX SP4 z uprawnieniami administratora...\nrunas /savecred /user:Admin "C:\\Program Files (x86)\\Pro-face\\GP-Pro EX 4.09 SP4\\Designer.exe"\necho Jeśli to pierwsze uruchomienie, wprowadź hasło administratora\necho Następne uruchomienia nie będą wymagać hasła\npause`,
+                    
+                    'MotionTool.bat': `@echo off\necho Uruchamianie MotionTool z uprawnieniami administratora...\nrunas /savecred /user:Admin "C:\\Program Files (x86)\\Motion Tool\\MotionTool\\MotionTool.exe"\necho Jeśli to pierwsze uruchomienie, wprowadź hasło administratora\necho Następne uruchomienia nie będą wymagać hasła\npause`,
+                    
+                    'menurz.bat': `@echo off\necho Uruchamianie Menedżera urządzeń z uprawnieniami administratora...\nrunas /savecred /user:Admin "cmd.exe /k C:\\Windows\\System32\\devmgmt.msc"\necho Jeśli to pierwsze uruchomienie, wprowadź hasło administratora\necho Następne uruchomienia nie będą wymagać hasła\npause`
+                };
+
+                const content = fileContents[filename];
+                if (!content) return;
+
+                // Tworzenie obiektu Blob z zawartością pliku
+                const blob = new Blob([content], { type: 'application/bat' });
+                
+                // Tworzenie tymczasowego linku do pobrania
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Sprzątanie
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
